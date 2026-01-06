@@ -2,8 +2,6 @@
   "toilet": {"price": 120, "labour": 40},
   "sink": {"price": 80, "labour": 25},
   "bathtub": {"price": 250, "labour": 60},
-  "tiles_gray": {"price": 15, "labour": 5},
-  "tiles_white": {"price": 12, "labour": 5},
-  "wall_blue": {"price": 5, "labour": 3},
-  "wall_white": {"price": 4, "labour": 3}
+  "tiles": {"price": 15, "labour": 5},
+  "wall": {"price": 5, "labour": 3}
 }
