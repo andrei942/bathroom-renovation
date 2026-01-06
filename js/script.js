@@ -1,116 +1,78 @@
 let data = {};
 let total = 0;
 
-// Load data from data.json
+// Load prices
 fetch('data.json')
   .then(res => res.json())
   .then(json => data = json);
 
-// DOM Elements
-const roomTypeSelect = document.getElementById('roomType');
-const itemsContainer = document.getElementById('itemsContainer');
 const roomUpload = document.getElementById('roomUpload');
 const roomImage = document.getElementById('roomImage');
-const floorAreaInput = document.getElementById('floorArea');
-const wallAreaInput = document.getElementById('wallArea');
+const toiletCheckbox = document.getElementById('toiletSelect');
+const sinkCheckbox = document.getElementById('sinkSelect');
+const bathtubCheckbox = document.getElementById('bathtubSelect');
 const priceDisplay = document.getElementById('price');
 const downloadBtn = document.getElementById('downloadPDF');
 
-let checkboxes = {};
-
 // Show uploaded image
-roomUpload.addEventListener('change', (e) => {
+roomUpload.addEventListener('change', e => {
   const file = e.target.files[0];
-  if (file) {
+  if(file){
     roomImage.src = URL.createObjectURL(file);
   }
 });
 
-// Populate items based on room type
-function loadItems() {
-  const room = roomTypeSelect.value;
-  itemsContainer.innerHTML = "<h2>Select items to renovate:</h2>";
-  checkboxes = {};
-  for (let key in data[room]) {
-    if (key === 'tiles' || key === 'wall') continue; // skip per-m2 items
-    const label = document.createElement('label');
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.id = key + "Select";
-    cb.dataset.item = key;
-    label.appendChild(cb);
-    label.appendChild(document.createTextNode(` ${capitalize(key)} (£${data[room][key].price + data[room][key].labour})`));
-    itemsContainer.appendChild(label);
-    checkboxes[key] = cb;
-    cb.addEventListener('change', calculatePrice);
-  }
-}
-
-// Capitalize
-function capitalize(str){ return str.charAt(0).toUpperCase() + str.slice(1); }
-
 // Calculate total
-function calculatePrice() {
-  const room = roomTypeSelect.value;
-  const floorArea = parseFloat(floorAreaInput.value) || 0;
-  const wallArea = parseFloat(wallAreaInput.value) || 0;
+function calculatePrice(){
   total = 0;
-
-  // Add per-item prices
-  for (let key in checkboxes) {
-    if (checkboxes[key].checked) {
-      total += data[room][key].price + data[room][key].labour;
-    }
-  }
-
-  // Add per-square-meter prices
-  total += (data[room].tiles.price_per_m2 + data[room].tiles.labour_per_m2) * floorArea;
-  total += (data[room].wall.price_per_m2 + data[room].wall.labour_per_m2) * wallArea;
-
-  priceDisplay.textContent = total.toFixed(2);
+  if(toiletCheckbox.checked) total += data.toilet.price + data.toilet.labour;
+  if(sinkCheckbox.checked) total += data.sink.price + data.sink.labour;
+  if(bathtubCheckbox.checked) total += data.bathtub.price + data.bathtub.labour;
+  priceDisplay.textContent = total;
 }
 
-// Load initial items
-loadItems();
-roomTypeSelect.addEventListener('change', () => {
-  loadItems();
-  calculatePrice();
-});
-[floorAreaInput, wallAreaInput].forEach(el => el.addEventListener('input', calculatePrice));
+[toiletCheckbox, sinkCheckbox, bathtubCheckbox].forEach(cb => cb.addEventListener('change', calculatePrice));
+
+// Function to convert image to data URL
+function getImageDataURL(img) {
+  return new Promise((resolve) => {
+    if(!img.src) return resolve(null);
+    const image = new Image();
+    image.src = img.src;
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image,0,0);
+      const dataURL = canvas.toDataURL('image/jpeg');
+      resolve(dataURL);
+    };
+  });
+}
 
 // Download PDF
-downloadBtn.addEventListener('click', () => {
+downloadBtn.addEventListener('click', async () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.setFontSize(16);
-  doc.text("Renovation Estimate", 10, 10);
+  doc.text("Bathroom Renovation Estimate", 10, 10);
   let y = 20;
 
-  doc.text(`Room: ${capitalize(roomTypeSelect.value)}`, 10, y); y += 10;
+  if(toiletCheckbox.checked) { doc.text("Toilet: Yes (£160)", 10, y); y+=10; }
+  if(sinkCheckbox.checked) { doc.text("Sink: Yes (£105)", 10, y); y+=10; }
+  if(bathtubCheckbox.checked) { doc.text("Bathtub: Yes (£310)", 10, y); y+=10; }
 
-  for (let key in checkboxes) {
-    if (checkboxes[key].checked) {
-      doc.text(`${capitalize(key)}: Yes (£${data[roomTypeSelect.value][key].price + data[roomTypeSelect.value][key].labour})`, 10, y);
-      y += 10;
-    }
+  doc.text(`Total: £${total}`, 10, y+10);
+
+  // Add image safely
+  const imgData = await getImageDataURL(roomImage);
+  if(imgData){
+    const ratio = roomImage.naturalWidth / roomImage.naturalHeight;
+    const width = 180;
+    const height = width / ratio;
+    doc.addImage(imgData, 'JPEG', 10, y+20, width, height);
   }
 
-  doc.text(`Floor area: ${floorAreaInput.value} m²`, 10, y); y += 10;
-  doc.text(`Wall area: ${wallAreaInput.value} m²`, 10, y); y += 10;
-  doc.text(`Total Estimate: £${total.toFixed(2)}`, 10, y); y += 10;
-
-  // Add uploaded image
-  if (roomImage.src) {
-    const img = new Image();
-    img.src = roomImage.src;
-    img.onload = () => {
-      const ratio = img.width / img.height;
-      const width = 180;
-      const height = width / ratio;
-      doc.addImage(img, 'JPEG', 10, y, width, height);
-      doc.save("RenovationEstimate.pdf");
-    }
-  } else {
-    doc.save("RenovationEstimate.pdf");
-  }
+  doc.save("Estimate.pdf");
 });
