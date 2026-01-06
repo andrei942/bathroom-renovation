@@ -1,5 +1,5 @@
 let data = {};
-let total = 0;
+let total = 0;i
 
 // Load prices
 fetch('data.json')
