@@ -1,7 +1,20 @@
 {
-  "toilet": {"price": 120, "labour": 40},
-  "sink": {"price": 80, "labour": 25},
-  "bathtub": {"price": 250, "labour": 60},
-  "tiles": {"price": 15, "labour": 5},
-  "wall": {"price": 5, "labour": 3}
+  "bathroom": {
+    "toilet": {"price": 120, "labour": 40},
+    "sink": {"price": 80, "labour": 25},
+    "bathtub": {"price": 250, "labour": 60},
+    "tiles": {"price_per_m2": 15, "labour_per_m2": 5},
+    "wall": {"price_per_m2": 5, "labour_per_m2": 3},
+    "mirror": {"price": 50, "labour": 10},
+    "cabinet": {"price": 100, "labour": 30},
+    "lighting": {"price": 60, "labour": 20}
+  },
+  "kitchen": {
+    "sink": {"price": 100, "labour": 25},
+    "cabinet": {"price": 120, "labour": 35},
+    "countertop": {"price": 200, "labour": 50},
+    "tiles": {"price_per_m2": 18, "labour_per_m2": 5},
+    "wall": {"price_per_m2": 6, "labour_per_m2": 3},
+    "lighting": {"price": 70, "labour": 25}
+  }
 }
