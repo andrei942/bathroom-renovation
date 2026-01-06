@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bathroom Renovation</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Bathroom Renovation</h1>
+
+<div id="bathroom">
+  <div class="floor"></div>
+  <div class="wall"></div>
+</div>
+
+<div id="controls">
+  <label>Toilet:
+    <select id="toiletSelect">
+      <option value="toilet">Standard Toilet</option>
+    </select>
+  </label>
+
+  <label>Sink:
+    <select id="sinkSelect">
+      <option value="sink">Standard Sink</option>
+    </select>
+  </label>
+
+  <label>Bathtub:
+    <select id="bathtubSelect">
+      <option value="bathtub">Standard Bathtub</option>
+    </select>
+  </label>
+
+  <label>Wall Color:
+    <select id="wallSelect">
+      <option value="wall_blue">Blue</option>
+      <option value="wall_white">White</option>
+    </select>
+  </label>
+
+  <label>Floor Tiles:
+    <select id="floorSelect">
+      <option value="tiles_gray">Gray</option>
+      <option value="tiles_white">White</option>
+    </select>
+  </label>
+</div>
+
+<div>
+  <strong>Total Estimate:</strong> £<span id="price">0</span>
+</div>
+
+<button id="downloadPDF">Download Estimate PDF</button>
+
+<script src="js/script.js"></script>
+</body>
+</html>
