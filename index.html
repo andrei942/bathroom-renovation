@@ -3,53 +3,24 @@
 <head>
   <title>Bathroom Renovation</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <h1>Bathroom Renovation</h1>
 
-<div id="bathroom">
-  <div class="floor"></div>
-  <div class="wall"></div>
-</div>
+<label>Upload your room photo:</label>
+<input type="file" id="roomUpload" accept="image/*">
+<img id="roomImage" src="" alt="Your Room" style="max-width:400px; display:block; margin-top:10px; border:1px solid #ccc;">
 
-<div id="controls">
-  <label>Toilet:
-    <select id="toiletSelect">
-      <option value="toilet">Standard Toilet</option>
-    </select>
-  </label>
+<h2>Select items to renovate:</h2>
+<label><input type="checkbox" id="toiletSelect"> Replace Toilet</label><br>
+<label><input type="checkbox" id="sinkSelect"> Replace Sink</label><br>
+<label><input type="checkbox" id="bathtubSelect"> Replace Bathtub</label><br>
+<label><input type="checkbox" id="tilesSelect"> Replace Floor Tiles</label><br>
+<label><input type="checkbox" id="wallSelect"> Repaint Walls</label><br>
 
-  <label>Sink:
-    <select id="sinkSelect">
-      <option value="sink">Standard Sink</option>
-    </select>
-  </label>
-
-  <label>Bathtub:
-    <select id="bathtubSelect">
-      <option value="bathtub">Standard Bathtub</option>
-    </select>
-  </label>
-
-  <label>Wall Color:
-    <select id="wallSelect">
-      <option value="wall_blue">Blue</option>
-      <option value="wall_white">White</option>
-    </select>
-  </label>
-
-  <label>Floor Tiles:
-    <select id="floorSelect">
-      <option value="tiles_gray">Gray</option>
-      <option value="tiles_white">White</option>
-    </select>
-  </label>
-</div>
-
-<div>
-  <strong>Total Estimate:</strong> £<span id="price">0</span>
-</div>
+<h2>Total Estimate: £<span id="price">0</span></h2>
 
 <button id="downloadPDF">Download Estimate PDF</button>
 
